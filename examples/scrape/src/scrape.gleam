@@ -14,12 +14,7 @@ pub fn main() {
 
   // resp.body |> io.println
 
-  let assert Ok(jsdom) = resp.body |> document.new
-
-  let document =
-    jsdom
-    |> document.get_window
-    |> document.get_document
+  let assert Ok(document) = resp.body |> document.parse
 
   let el = document |> document.query_selector_all("p")
 
