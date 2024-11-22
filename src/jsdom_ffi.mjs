@@ -1,6 +1,7 @@
 // @deno-types=@types/jsdom
 import { JSDOM } from "jsdom";
-import { Ok, Error } from "./gleam.mjs";
+import { None, Some } from "../gleam_stdlib/gleam/option.mjs";
+import { Error, Ok } from "./gleam.mjs";
 
 /** @import { DOMWindow } from "jsdom" */
 
@@ -28,4 +29,20 @@ export function get_window(jsdom) {
  */
 export function get_document(window) {
   return window.document;
+}
+
+/**
+ * @param {Document} document
+ * @param {string} selector
+ */
+export function query_selector(document, selector) {
+  return makeOption(document.querySelector(selector));
+}
+
+function makeOption(value) {
+  if (value === null || value === undefined) {
+    return new None();
+  }
+
+  return new Some(value);
 }
