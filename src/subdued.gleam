@@ -2,6 +2,7 @@ import gleam/fetch
 import gleam/http/request
 import gleam/io
 import gleam/javascript/promise
+import gleam/list
 import gleam/option.{type Option}
 
 // import gleam/http/response
@@ -26,6 +27,12 @@ pub fn get_document(window: Window) -> Document
 @external(javascript, "./jsdom_ffi.mjs", "query_selector")
 pub fn query_selector(document: Document, selector: String) -> Option(Element)
 
+@external(javascript, "./jsdom_ffi.mjs", "query_selector_all")
+pub fn query_selector_all(document: Document, selector: String) -> List(Element)
+
+@external(javascript, "./jsdom_ffi.mjs", "inner_html")
+pub fn inner_html(element: Element) -> String
+
 pub fn main() {
   let assert Ok(req) = request.to("https://example.com")
 
@@ -39,9 +46,9 @@ pub fn main() {
 
   let document = jsdom |> get_window |> get_document
 
-  let el = document |> query_selector("p")
+  let el = document |> query_selector_all("p")
 
-  io.debug(el)
+  list.each(el, fn(p) { p |> inner_html |> io.println })
 
   promise.resolve(Ok(Nil))
 }
