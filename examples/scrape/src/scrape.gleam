@@ -3,7 +3,7 @@ import gleam/http/request
 import gleam/io
 import gleam/javascript/promise
 import gleam/list
-import subdued
+import subdued/document
 
 pub fn main() {
   let assert Ok(req) = request.to("https://example.com")
@@ -14,16 +14,16 @@ pub fn main() {
 
   // resp.body |> io.println
 
-  let assert Ok(jsdom) = resp.body |> subdued.new
+  let assert Ok(jsdom) = resp.body |> document.new
 
   let document =
     jsdom
-    |> subdued.get_window
-    |> subdued.get_document
+    |> document.get_window
+    |> document.get_document
 
-  let el = document |> subdued.query_selector_all("p")
+  let el = document |> document.query_selector_all("p")
 
-  list.each(el, fn(p) { p |> subdued.inner_html |> io.println })
+  list.each(el, fn(p) { p |> document.inner_html |> io.println })
 
   promise.resolve(Ok(Nil))
 }
