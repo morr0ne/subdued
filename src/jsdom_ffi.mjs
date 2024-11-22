@@ -3,7 +3,6 @@ import { JSDOM } from "jsdom";
 import { None, Some } from "../gleam_stdlib/gleam/option.mjs";
 import { Error, Ok, List } from "./gleam.mjs";
 
-/** @import { DOMWindow } from "jsdom" */
 /** @import { Option } from "../gleam_stdlib/gleam/option.mjs" */
 
 function makeOption(value) {
@@ -16,28 +15,14 @@ function makeOption(value) {
 
 /**
  * @param {string} html
- * @returns {Result<JSDOM,String>}
+ * @returns {Result<Document,String>}
  */
-export function new_jsdom(html) {
+export function parse(html) {
   try {
-    return new Ok(new JSDOM(html));
+    return new Ok(new JSDOM(html).window.document);
   } catch (error) {
     return new Error(error.message);
   }
-}
-
-/**
- * @param {JSDOM} jsdom
- */
-export function get_window(jsdom) {
-  return jsdom.window;
-}
-
-/**
- * @param {DOMWindow} window
- */
-export function get_document(window) {
-  return window.document;
 }
 
 /**
